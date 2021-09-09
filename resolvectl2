@@ -1,0 +1,15 @@
+variant: fcos
+version: 1.3.0
+systemd:
+  units:
+    - name: hello.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=set-dns!
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/usr/bin//systemd-resolve --interface eth1 --set-dns 10.104.64.2 --set-domain ‘~mylabzolution.com’
+        [Install]
+        WantedBy=multi-user.target
