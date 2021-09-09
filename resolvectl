@@ -1,0 +1,15 @@
+variant: fcos
+version: 1.1.0
+systemd:
+  units:
+    - name: systemd-resolved.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Set dns per link!
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/usr/bin/systemd-resolve --interface eth1 --set-domain ‘~mylabzolution.com’ --set-dns 10.104.64.2
+        [Install]
+        WantedBy=multi-user.target
