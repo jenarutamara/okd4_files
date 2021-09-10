@@ -1,0 +1,27 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: okd-configure-master-node-dns
+spec:
+  config:
+    ignition:
+      version: 3.1.0
+    storage:
+      links:
+      - path: /etc/resolv.conf
+        overwrite: true
+        target: ../run/systemd/resolve/resolv.conf
+      files:
+      - contents:
+          source: data:text/plain;charset=utf-8;base64,W1Jlc29sdmVdCkROU1N0dWJMaXN0ZW5lcj1ubwo=
+        mode: 420
+        overwrite: true
+        path: /etc/systemd/resolved.conf.d/50-no-dns-stub.conf
+      # Optional - see notes below
+      - contents:
+          source: data:text/plain;charset=utf-8;base64,W1Jlc29sdmVdCkROUz0xMC4xMDQuNjQuMjo1MyVlbnM0I215bGFiem9sdXRpb24uY29tCkRvbWFpbnM9fm15bGFiem9sdXRpb24uY29t
+        mode: 420
+        overwrite: true
+        path: /etc/systemd/resolved.conf.d/75-static-dns-servers.conf
