@@ -1,0 +1,34 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: master
+  name: okd-configure-master-node-ip
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    storage:
+      files:
+      - contents:
+        # See below on writing your IP resolution script
+          source: data:text/plain;charset=utf-8;base64,IyEvYmluL2Jhc2gKSE9TVE5BTUVfUkVTT0xWRURfSVA9JChob3N0bmFtZSAtLWlwLWFkZHJlc3MgfCBzZWQgcy9cIi8vZykKcHJpbnRmICJbU2VydmljZV1cbkVudmlyb25tZW50PVwiS1VCRUxFVF9OT0RFX0lQPSR7SE9TVE5BTUVfUkVTT0xWRURfSVB9XCJcbiIgPiAvZXRjL3N5c3RlbWQvc3lzdGVtL2t1YmVsZXQuc2VydmljZS5kLzIwLW5vZGVuZXQuY29uZgpwcmludGYgIltTZXJ2aWNlXVxuRW52aXJvbm1lbnQ9XCJDT05UQUlORVJfU1RSRUFNX0FERFJFU1M9JHtIT1NUTkFNRV9SRVNPTFZFRF9JUH1cIlxuIiA+IC9ldGMvc3lzdGVtZC9zeXN0ZW0vY3Jpby5zZXJ2aWNlLmQvMjAtbm9kZW5ldC5jb25m
+        mode: 493
+        overwrite: true
+        path: /usr/local/bin/okd-set-node-ip.sh
+    systemd:
+      units:
+      - name: okd-node-ip.service
+        enabled: true
+        contents: |
+          [Unit]
+          Description=Overwrites the output of nodeip-configuration.service to replace with our result
+          After=nodeip-configuration.service
+          Before=kubelet.service crio.service
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/local/bin/okd-set-node-ip.sh
+
+          [Install]
+          RequiredBy=kubelet.service
