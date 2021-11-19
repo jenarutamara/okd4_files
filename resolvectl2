@@ -10,6 +10,6 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/usr/bin/systemd-resolve --interface ens4 --set-dns 10.104.64.2 --set-domain ‘~mylabzolution.com’
+        ExecStart=/usr/bin/systemd-resolve --interface ens4 --set-dns 10.104.64.2 --set-domain ‘~mybasedomain.com’
         [Install]
         WantedBy=multi-user.target
